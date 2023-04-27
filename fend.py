@@ -1,0 +1,152 @@
+import datetime
+
+import streamlit as st
+import plotly.graph_objects as go
+import streamlit_option_menu as om
+import pandas as pd
+from datetime import date
+import bend
+
+st.set_page_config("Wallet Watch")
+
+
+if 'user' not in st.session_state:
+    st.session_state['user'] = 'x'
+if 'opt' not in st.session_state:
+    st.session_state['opt'] = 'Home'
+if 'login' not in st.session_state:
+    st.session_state['login'] = False
+if 'userinfo' not in st.session_state:
+    st.session_state['userinfo'] = {}
+with st.sidebar as sb0:
+    if not st.session_state['login']:
+        with st.form("login_form"):
+            # st.header("Login")
+            user_name = st.text_input("User MailId")
+            password = st.text_input("Password", type='password')
+            form_submit_button = st.form_submit_button(label="LogIn")
+            if form_submit_button:
+                st.session_state['login'], st.session_state['user'] = bend.sign_in(user_name,password)
+            if st.session_state['user'] == '':
+                st.error("Wrong credentials")
+
+    opt = om.option_menu(menu_title='TASK WALLET',
+                         options=['Home','Calendar', 'Record Expense', 'Expense History', 'Update Tasks', 'Sign up', 'Settings'],
+                         default_index=0, menu_icon='bi bi-layers-fill',
+                         icons=['bi bi-door-open', 'bi bi-calendar-check', 'bi bi-cash', 'bi bi-clock-history', 'bi bi-card-checklist', 'bi bi-person-plus', 'bi bi-gear'])
+    st.session_state['opt'] = opt
+
+if st.session_state['opt'] == 'Home'  and st.session_state['login']:
+    st.session_state['userinfo'] = bend.get_user_data(st.session_state['user'])
+    if 'home_select' not in st.session_state:
+        st.session_state['home_select'] = ''
+    st.session_state['home_select'] = om.option_menu(menu_title='', options=['Expenses', 'Tasks'], orientation='horizontal', icons=['bi bi-currency-dollar', 'bi bi-list-task'])
+    if st.session_state['home_select'] == 'Expenses':
+        pie_fig = bend.show_expenses_piechart(st.session_state['userinfo'])
+        st.subheader("Amount spent : " + str(st.session_state['userinfo']['total']))
+        st.subheader("Remaining : " + str(st.session_state['userinfo']['pocket_money'] - st.session_state['userinfo']['total']))
+        st.plotly_chart(pie_fig)
+        expense_df = bend.time_line(st.session_state['userinfo'])
+        st.line_chart(expense_df, x = 'Date', y = 'Amount')
+    elif st.session_state['home_select'] == 'Tasks':
+        task_list = bend.task_list(datetime.datetime.today().day, st.session_state['userinfo'])
+        st.subheader("Today's tasks :")
+        c = 1
+        if task_list[0] == '':
+            st.write("No tasks scheduled")
+        else:
+            for i in task_list:
+                st.write(f'{c}. {i}')
+                c += 1
+    st.write(st.session_state['user'])
+    st.write(st.session_state['userinfo'])
+
+elif st.session_state['opt'] == 'Calendar' and st.session_state['login']:
+    enddate = 32
+    if datetime.datetime.today().month % 2 == 0:
+        enddate = 31
+
+    datelist = [i for i in range(1,enddate)]
+    month = datetime.datetime.today().month
+    for i in range(1, enddate, 1):
+        task_list = bend.task_list(i, st.session_state['userinfo'])
+        st.subheader(f'Tasks for {i}/{month}:')
+        c = 1
+        if task_list[0] == '':
+            st.write('No tasks scheduled')
+            continue
+        for j in task_list:
+            st.write(f'{c}. {j}')
+            c += 1
+
+elif st.session_state['opt'] == 'Record Expense' and st.session_state['login']:
+    with st.form("Record"):
+        st.subheader("Expense details")
+        reason = st.text_input("Reason")
+        day = st.date_input("Date").day
+        amt = st.number_input("Amount")
+        fsb = st.form_submit_button("Enter record")
+    if fsb:
+        bend.record_exp(reason, day, amt, st.session_state['user'], st.session_state['userinfo'])
+        st.success("Entry recorded")
+elif st.session_state['opt'] == 'Expense History' and st.session_state['login']:
+    df = bend.history_df(st.session_state['userinfo'])
+    st.dataframe(df)
+elif st.session_state['opt'] == 'Update Tasks' and st.session_state['login']:
+    if 'uopt' not in st.session_state:
+        st.session_state['uopt'] = ''
+    st.session_state['uopt'] = om.option_menu(menu_title="", options=['Create', 'Delete'], orientation='horizontal')
+    if st.session_state['uopt'] == 'Create':
+        with st.form('Create_Task'):
+            date = st.date_input("Task date")
+            task = st.text_input("Task")
+            day = date.day
+            cr_tsk = st.form_submit_button("Schedule task")
+        if cr_tsk:
+            st.session_state['userinfo'] = bend.get_user_data(st.session_state['user'])
+            bend.create_task(day, task, st.session_state['userinfo'], st.session_state['user'])
+            st.session_state['userinfo'] = bend.get_user_data(st.session_state['user'])
+            st.info("Task created successfully")
+    elif st.session_state['uopt'] == 'Delete':
+        day = st.date_input("Date").day
+        with st.form('Delete_Task'):
+            st.subheader('Select tasks to delete')
+            task_list = bend.task_list(day, st.session_state['userinfo'])
+            check_list = [False for i in range(len(task_list))]
+            for i in range(len(task_list)):
+                check_list[i] = st.checkbox(f'{task_list[i]}', key=i)
+            del_task = st.form_submit_button('Delete')
+        if del_task:
+            st.session_state['userinfo'] = bend.get_user_data(st.session_state['user'])
+            bend.del_task(check_list, st.session_state['user'], task_list, st.session_state['userinfo'], day)
+            st.session_state['userinfo'] = bend.get_user_data(st.session_state['user'])
+            st.info("Tasks deleted successfully")
+
+elif st.session_state['opt'] == 'Sign up':
+    try:
+        with st.form('sign_up'):
+            mail_id = st.text_input("User Mailid")
+            password = st.text_input("Password", type='password')
+            pocket_money = st.number_input("Your pocket money")
+            target_saving = st.number_input("Target saving")
+            sign_up_button = st.form_submit_button("Sign Up")
+        if sign_up_button:
+            try:
+                bend.sign_up(mail_id,password)
+                bend.create_user_info(mail_id.replace('.','!'),pocket_money,target_saving)
+                st.balloons()
+                st.write("Account created successfully")
+            except:
+                st.error("User already exists!")
+    except:
+        st.subheader("Refresh the app and sign up again")
+elif st.session_state['opt'] == 'Settings' and st.session_state['login']:
+    with st.form("settings"):
+        pocket_money = st.number_input("New pocket money")
+        target_saving = st.number_input("Target saving")
+        setting_button = st.form_submit_button("Update changes")
+    if setting_button:
+        bend.update_settings(pocket_money, target_saving, st.session_state['user'])
+        st.info("Settings applied")
+if not(st.session_state['login'] or st.session_state['opt'] == 'Sign up'):
+    st.header("Login to your account first")
