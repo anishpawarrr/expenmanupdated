@@ -38,14 +38,15 @@ if st.session_state['opt'] == 'Home'  and st.session_state['login']:
         st.session_state['home_select'] = ''
     st.session_state['home_select'] = om.option_menu(menu_title='', options=['Expenses', 'Tasks'], orientation='horizontal', icons=['bi bi-currency-dollar', 'bi bi-list-task'])
     if st.session_state['home_select'] == 'Expenses':
-        pie_fig = bend.show_expenses_piechart(st.session_state['userinfo'])
         st.subheader("Amount spent : " + str(st.session_state['userinfo']['total']))
         st.subheader("Remaining : " + str(st.session_state['userinfo']['pocket_money'] - st.session_state['userinfo']['total']))
         if st.session_state['userinfo']['target_saving'] > (st.session_state['userinfo']['pocket_money'] - st.session_state['userinfo']['total']):
             st.error('You are using money from savings quota')
-        st.plotly_chart(pie_fig)
+        st.subheader("This month's overview")
         expense_df = bend.time_line(st.session_state['userinfo'])
         st.line_chart(expense_df, x = 'Date', y = 'Amount')
+        pie_fig = bend.show_expenses_piechart(st.session_state['userinfo'])
+        st.plotly_chart(pie_fig)
     elif st.session_state['home_select'] == 'Tasks':
         task_list = bend.task_list(datetime.datetime.today().day, st.session_state['userinfo'])
         st.subheader("Today's tasks :")
@@ -71,8 +72,9 @@ elif st.session_state['opt'] == 'Calendar' and st.session_state['login']:
         st.subheader(f'Tasks for {i}/{month}:')
         c = 1
         if task_list[0] == '':
-            st.write('No tasks scheduled')
             continue
+            # st.write('No tasks scheduled')
+            # continue
         for j in task_list:
             st.write(f'{c}. {j}')
             c += 1
@@ -107,7 +109,7 @@ elif st.session_state['opt'] == 'Expense History' and st.session_state['login']:
 elif st.session_state['opt'] == 'Update Tasks' and st.session_state['login']:
     if 'uopt' not in st.session_state:
         st.session_state['uopt'] = ''
-    st.session_state['uopt'] = om.option_menu(menu_title="", options=['Create', 'Delete'], orientation='horizontal')
+    st.session_state['uopt'] = om.option_menu(menu_title="", options=['Create', 'Delete'], icons=['bi bi-folder-plus','bi bi-folder-minus'] ,orientation='horizontal')
     if st.session_state['uopt'] == 'Create':
         with st.form('Create_Task'):
             date = st.date_input("Task date")
