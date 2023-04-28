@@ -69,12 +69,13 @@ elif st.session_state['opt'] == 'Calendar' and st.session_state['login']:
     month = datetime.datetime.today().month
     for i in range(1, enddate, 1):
         task_list = bend.task_list(i, st.session_state['userinfo'])
-        st.subheader(f'Tasks for {i}/{month}:')
+        # st.subheader(f'Tasks for {i}/{month}:')
         c = 1
         if task_list[0] == '':
             continue
             # st.write('No tasks scheduled')
             # continue
+        st.subheader(f'Tasks for {i}/{month}:')
         for j in task_list:
             st.write(f'{c}. {j}')
             c += 1
