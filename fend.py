@@ -54,7 +54,7 @@ if st.session_state['opt'] == 'Home'  and st.session_state['login']:
             for i in task_list:
                 st.write(f'{c}. {i}')
                 c += 1
-    st.write(st.session_state['user'])
+    # st.write(st.session_state['user'])
     st.write(st.session_state['userinfo'])
 
 elif st.session_state['opt'] == 'Calendar' and st.session_state['login']:
