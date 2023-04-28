@@ -90,6 +90,20 @@ elif st.session_state['opt'] == 'Record Expense' and st.session_state['login']:
 elif st.session_state['opt'] == 'Expense History' and st.session_state['login']:
     df = bend.history_df(st.session_state['userinfo'])
     st.table(df)
+
+    @st.experimental_memo
+    def convert_df(df):
+        return df.to_csv(index=False).encode('utf-8')
+
+    csv = convert_df(df)
+
+    st.download_button(
+        f"Download {datetime.datetime.today().month}/23 expenses",
+        csv,
+        "expenses.csv",
+        "text/csv",
+    )
+
 elif st.session_state['opt'] == 'Update Tasks' and st.session_state['login']:
     if 'uopt' not in st.session_state:
         st.session_state['uopt'] = ''
