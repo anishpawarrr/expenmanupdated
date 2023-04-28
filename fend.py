@@ -87,7 +87,7 @@ elif st.session_state['opt'] == 'Record Expense' and st.session_state['login']:
         st.success("Entry recorded")
 elif st.session_state['opt'] == 'Expense History' and st.session_state['login']:
     df = bend.history_df(st.session_state['userinfo'])
-    st.dataframe(df)
+    st.table(df)
 elif st.session_state['opt'] == 'Update Tasks' and st.session_state['login']:
     if 'uopt' not in st.session_state:
         st.session_state['uopt'] = ''
