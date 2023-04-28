@@ -41,7 +41,7 @@ if st.session_state['opt'] == 'Home'  and st.session_state['login']:
         pie_fig = bend.show_expenses_piechart(st.session_state['userinfo'])
         st.subheader("Amount spent : " + str(st.session_state['userinfo']['total']))
         st.subheader("Remaining : " + str(st.session_state['userinfo']['pocket_money'] - st.session_state['userinfo']['total']))
-        if st.session_state['target_saving'] < (st.session_state['userinfo']['pocket_money'] - st.session_state['userinfo']['total']):
+        if st.session_state['userinfo']['target_saving'] < (st.session_state['userinfo']['pocket_money'] - st.session_state['userinfo']['total']):
             st.error('You are using money from savings quota')
         st.plotly_chart(pie_fig)
         expense_df = bend.time_line(st.session_state['userinfo'])
