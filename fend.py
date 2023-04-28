@@ -1,13 +1,9 @@
 import datetime
-
 import streamlit as st
-import plotly.graph_objects as go
 import streamlit_option_menu as om
-import pandas as pd
-from datetime import date
 import bend
 
-st.set_page_config("Wallet Watch")
+st.set_page_config(page_title="TW", layout='centered', initial_sidebar_state="expanded")
 
 
 if 'user' not in st.session_state:
