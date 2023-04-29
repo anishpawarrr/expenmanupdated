@@ -44,7 +44,7 @@ def create_user_info(mail_id, pocket_money, target_saving):
 
 def get_user_data(user):
     try:
-        nm = numpy.random.randint(100)
+        nm = numpy.random.randint(1000)
         nm = str(nm)
         cred = credentials.Certificate("service_account_key.json")
         app = firebase_admin.initialize_app(cred, name=nm)
