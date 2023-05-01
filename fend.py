@@ -163,5 +163,11 @@ elif st.session_state['opt'] == 'Settings' and st.session_state['login']:
     if setting_button:
         bend.update_settings(pocket_money, target_saving, st.session_state['user'])
         st.info("Settings applied")
+    clear_history = st.button("Clear history")
+    if clear_history:
+        pm = st.session_state['userinfo']['pocket_money']
+        ts = st.session_state['userinfo']['target_saving']
+        user = st.session_state['user']
+        bend.create_user_info(user, pm, ts)
 if not(st.session_state['login'] or st.session_state['opt'] == 'Sign up'):
     st.header("Login to your account first")
