@@ -169,5 +169,6 @@ elif st.session_state['opt'] == 'Settings' and st.session_state['login']:
         ts = st.session_state['userinfo']['target_saving']
         user = st.session_state['user']
         bend.create_user_info(user, pm, ts)
+        st.success("History deleted successfully")
 if not(st.session_state['login'] or st.session_state['opt'] == 'Sign up'):
     st.header("Login to your account first")
