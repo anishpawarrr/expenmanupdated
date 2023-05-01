@@ -58,7 +58,7 @@ if st.session_state['opt'] == 'Home'  and st.session_state['login']:
                 st.write(f'{c}. {i}')
                 c += 1
     # st.write(st.session_state['user'])
-    st.write(st.session_state['userinfo'])
+    # st.write(st.session_state['userinfo'])
 
 elif st.session_state['opt'] == 'Calendar' and st.session_state['login']:
     enddate = 32
