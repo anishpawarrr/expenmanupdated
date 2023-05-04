@@ -179,7 +179,7 @@ elif st.session_state['opt'] == 'Settings' and st.session_state['login']:
         fsb = st.form_submit_button("Get notified through WhatsApp")
         if fsb and len(phno) == 10:
             st.session_state['userinfo'] = bend.upload_phno(st.session_state['user'], st.session_state['userinfo'], phno)
-        else:
+        elif fsb:
             st.write("You entered something wrong")
 
 if not(st.session_state['login'] or st.session_state['opt'] == 'Sign up'):
