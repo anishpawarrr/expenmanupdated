@@ -157,20 +157,6 @@ elif st.session_state['opt'] == 'Sign up':
     except:
         st.subheader("Refresh the app and sign up again")
 elif st.session_state['opt'] == 'Settings' and st.session_state['login']:
-    with st.form("settings"):
-        pocket_money = st.number_input("New pocket money")
-        target_saving = st.number_input("Target saving")
-        setting_button = st.form_submit_button("Update changes")
-    if setting_button:
-        st.session_state['userinfo'] = bend.update_settings(pocket_money, target_saving, st.session_state['user'])
-        st.info("Settings applied")
-    clear_history = st.button("Clear history")
-    if clear_history:
-        pm = st.session_state['userinfo']['pocket_money']
-        ts = st.session_state['userinfo']['target_saving']
-        user = st.session_state['user']
-        bend.create_user_info(user, pm, ts)
-        st.success("History deleted successfully")
     with st.form("reminder"):
         st.subheader("Enable WhatsApp reminding service")
         phno = int(st.number_input("Enter your number"))
@@ -185,6 +171,24 @@ elif st.session_state['opt'] == 'Settings' and st.session_state['login']:
             st.write("http://wa.me/+14155238886?text=join%20breath-forth", unsafe_allow_html=True)
         elif fsb:
             st.write("You entered something wrong")
+    with st.form("update"):
+        st.subheader("Update info")
+        pocket_money = st.number_input("New pocket money")
+        target_saving = st.number_input("Target saving")
+        setting_button = st.form_submit_button("Update changes")
+    if setting_button:
+        st.session_state['userinfo'] = bend.update_settings(pocket_money, target_saving, st.session_state['user'])
+        st.info("Settings applied")
+    # clear_history = st.button("Clear history")
+    with st.form('Clear'):
+        st.subheader("Clear data")
+        clear_history = st.form_submit_button("Clear history")
+    if clear_history:
+        pm = st.session_state['userinfo']['pocket_money']
+        ts = st.session_state['userinfo']['target_saving']
+        user = st.session_state['user']
+        bend.create_user_info(user, pm, ts)
+        st.success("History deleted successfully")
 
 if not(st.session_state['login'] or st.session_state['opt'] == 'Sign up'):
     st.header("Login to your account first")
