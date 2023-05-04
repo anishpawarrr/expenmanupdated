@@ -171,7 +171,7 @@ elif st.session_state['opt'] == 'Settings' and st.session_state['login']:
         user = st.session_state['user']
         bend.create_user_info(user, pm, ts)
         st.success("History deleted successfully")
-    st.write("To get whatsapp reminders click the link")
+    st.write("To get whatsapp reminders click the link and send prebuilt message")
     st.write("http://wa.me/+14155238886?text=join%20breath-forth", unsafe_allow_html=True)
 if not(st.session_state['login'] or st.session_state['opt'] == 'Sign up'):
     st.header("Login to your account first")
