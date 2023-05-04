@@ -177,7 +177,7 @@ elif st.session_state['opt'] == 'Settings' and st.session_state['login']:
         # st.write("http://wa.me/+14155238886?text=join%20breath-forth", unsafe_allow_html=True)
         # b = st.button("Send messages to this number")
         fsb = st.form_submit_button("Get notified through WhatsApp")
-        if fsb and len(phno) == 10:
+        if fsb and len(str(phno)) == 10:
             st.session_state['userinfo'] = bend.upload_phno(st.session_state['user'], st.session_state['userinfo'], phno)
         elif fsb:
             st.write("You entered something wrong")
