@@ -68,8 +68,6 @@
 #         tasklist = userdata[i]['tasks']
 #         # print(tasklist)
 #         today_task_string = str(tasklist[datetime.datetime.today().day + 1])
-#         print(datetime.datetime.today().day + 1)
-#         # print(today_task_string)
 #         if today_task_string == '' or today_task_string == ',':
 #             continue
 #         today_list = today_task_string.split(',')
@@ -85,7 +83,7 @@
 #         print(message.sid + 'Message sent to ' + i)
 #         return
 #
-# send_today_reminders()
-# send_tom_reminders()
+# # send_today_reminders()
+# # send_tom_reminders()
 # # http://wa.me/+14155238886?text=join%20breath-forth
 # # https://taskwallet.streamlit.app/

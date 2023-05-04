@@ -190,5 +190,7 @@ elif st.session_state['opt'] == 'Settings' and st.session_state['login']:
         bend.create_user_info(user, pm, ts)
         st.success("History deleted successfully")
 
+    st.write("For support contact : \nMail : anishpurupawar@gmail.com\nPhone Number : +919146623526")
+
 if not(st.session_state['login'] or st.session_state['opt'] == 'Sign up'):
     st.header("Login to your account first")
