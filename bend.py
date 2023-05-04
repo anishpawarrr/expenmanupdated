@@ -72,6 +72,7 @@ def update_settings(pocket_money, target_saving, user):
     userdata['pocket_money'] = pocket_money
     userdata['target_saving'] = target_saving
     userref.update(userdata)
+    return userdata
 
 def calendar():
     dicti = {"expenses": expense_dict(), "tasks": task_dict()}
@@ -96,7 +97,7 @@ def create_task(day, task, userdata,user):
     uref = root.child('Users')
     userref = uref.child(user)
     userref.update(userdata)
-    return
+    return userdata
 
 def del_task(bool_list, user, task_list, userdata, day):
     root = db.reference(url="https://expensemanager-f165e-default-rtdb.asia-southeast1.firebasedatabase.app/")
@@ -108,7 +109,7 @@ def del_task(bool_list, user, task_list, userdata, day):
             tasks += f'{task_list[i]},'
     userdata['tasks'][day] = tasks
     userref.update(userdata)
-    return
+    return userdata
 
 def task_list(day, userdata):
     task_string = userdata['tasks'][day]
@@ -138,7 +139,7 @@ def record_exp(reason, day, amount, user, userdata):
     uref = root.child('Users')
     userref = uref.child(user)
     userref.update(userdata)
-    return
+    return userdata
 
 def history_df(userdata):
     reasonstr = str(userdata['Reason'])
@@ -168,5 +169,3 @@ def new_month():
         pm = dicti[i]['pocket_money']
         ts = dicti[i]['target_saving']
         create_user_info(i, pm, ts)
-
-# new_month()
