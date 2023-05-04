@@ -88,7 +88,7 @@ elif st.session_state['opt'] == 'Record Expense' and st.session_state['login']:
         amt = st.number_input("Amount")
         fsb = st.form_submit_button("Enter record")
     if fsb:
-        bend.record_exp(reason, day, amt, st.session_state['user'], st.session_state['userinfo'])
+        st.session_state['userinfo'] = bend.record_exp(reason, day, amt, st.session_state['user'], st.session_state['userinfo'])
         st.success("Entry recorded")
 elif st.session_state['opt'] == 'Expense History' and st.session_state['login']:
     df = bend.history_df(st.session_state['userinfo'])
@@ -118,9 +118,9 @@ elif st.session_state['opt'] == 'Update Tasks' and st.session_state['login']:
             day = date.day
             cr_tsk = st.form_submit_button("Schedule task")
         if cr_tsk:
-            st.session_state['userinfo'] = bend.get_user_data(st.session_state['user'])
-            bend.create_task(day, task, st.session_state['userinfo'], st.session_state['user'])
-            st.session_state['userinfo'] = bend.get_user_data(st.session_state['user'])
+            # st.session_state['userinfo'] = bend.get_user_data(st.session_state['user'])
+            st.session_state['userinfo'] = bend.create_task(day, task, st.session_state['userinfo'], st.session_state['user'])
+            # st.session_state['userinfo'] = bend.get_user_data(st.session_state['user'])
             st.info("Task created successfully")
     elif st.session_state['uopt'] == 'Delete':
         day = st.date_input("Date").day
@@ -132,9 +132,9 @@ elif st.session_state['opt'] == 'Update Tasks' and st.session_state['login']:
                 check_list[i] = st.checkbox(f'{task_list[i]}', key=i)
             del_task = st.form_submit_button('Delete')
         if del_task:
-            st.session_state['userinfo'] = bend.get_user_data(st.session_state['user'])
-            bend.del_task(check_list, st.session_state['user'], task_list, st.session_state['userinfo'], day)
-            st.session_state['userinfo'] = bend.get_user_data(st.session_state['user'])
+            # st.session_state['userinfo'] = bend.get_user_data(st.session_state['user'])
+            st.session_state['userinfo'] = bend.del_task(check_list, st.session_state['user'], task_list, st.session_state['userinfo'], day)
+            # st.session_state['userinfo'] = bend.get_user_data(st.session_state['user'])
             st.info("Tasks deleted successfully")
 
 elif st.session_state['opt'] == 'Sign up':
@@ -161,7 +161,7 @@ elif st.session_state['opt'] == 'Settings' and st.session_state['login']:
         target_saving = st.number_input("Target saving")
         setting_button = st.form_submit_button("Update changes")
     if setting_button:
-        bend.update_settings(pocket_money, target_saving, st.session_state['user'])
+        st.session_state['userinfo'] = bend.update_settings(pocket_money, target_saving, st.session_state['user'])
         st.info("Settings applied")
     clear_history = st.button("Clear history")
     if clear_history:
