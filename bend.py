@@ -170,3 +170,12 @@ def new_month():
         pm = dicti[i]['pocket_money']
         ts = dicti[i]['target_saving']
         create_user_info(i, pm, ts)
+
+
+def upload_phno(user, userdata, phno):
+    userdata['phno'] = phno
+    root = db.reference(url="https://expensemanager-f165e-default-rtdb.asia-southeast1.firebasedatabase.app/")
+    uref = root.child('Users')
+    userref = uref.child(user)
+    userref.update(userdata)
+    return userdata

@@ -171,7 +171,16 @@ elif st.session_state['opt'] == 'Settings' and st.session_state['login']:
         user = st.session_state['user']
         bend.create_user_info(user, pm, ts)
         st.success("History deleted successfully")
-    st.write("To get whatsapp reminders click the link and send prebuilt message")
-    st.write("http://wa.me/+14155238886?text=join%20breath-forth", unsafe_allow_html=True)
+    with st.form("reminder"):
+        phno = st.number_input("Enter your number")
+        # st.write("To get whatsapp reminders click the link and send prebuilt message")
+        # st.write("http://wa.me/+14155238886?text=join%20breath-forth", unsafe_allow_html=True)
+        b = st.button("Send messages to this number")
+        fsb = st.form_submit_button("Get notified through WhatsApp")
+        if fsb and len(phno) == 10:
+            st.session_state['userinfo'] = bend.upload_phno(st.session_state['user'], st.session_state['userinfo'], phno)
+        else:
+            st.write("You entered something wrong")
+
 if not(st.session_state['login'] or st.session_state['opt'] == 'Sign up'):
     st.header("Login to your account first")
