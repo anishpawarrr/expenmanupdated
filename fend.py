@@ -34,6 +34,7 @@ with st.sidebar as sb0:
 
 if st.session_state['opt'] == 'Home'  and st.session_state['login']:
     st.session_state['userinfo'] = bend.get_user_data(st.session_state['user'])
+
     if 'home_select' not in st.session_state:
         st.session_state['home_select'] = ''
     st.session_state['home_select'] = om.option_menu(menu_title='', options=['Expenses', 'Tasks'], orientation='horizontal', icons=['bi bi-currency-dollar', 'bi bi-list-task'])
@@ -170,5 +171,7 @@ elif st.session_state['opt'] == 'Settings' and st.session_state['login']:
         user = st.session_state['user']
         bend.create_user_info(user, pm, ts)
         st.success("History deleted successfully")
+    st.write("To get whatsapp reminders click the link")
+    st.write("http://wa.me/+14155238886?text=join%20breath-forth", unsafe_allow_html=True)
 if not(st.session_state['login'] or st.session_state['opt'] == 'Sign up'):
     st.header("Login to your account first")

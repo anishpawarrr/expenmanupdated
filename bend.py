@@ -57,11 +57,12 @@ def get_user_data(user):
         # nm = numpy.random.randint(100)
         # nm = str(nm)
         # cred = credentials.Certificate("service_account_key.json")
-        # app = firebase_admin.initialize_app(cred,name=nm)
+        # app = firebase_admin.initialize_app(cred, name=nm)
         # root = db.reference(url="https://expensemanager-f165e-default-rtdb.asia-southeast1.firebasedatabase.app/")
         # uref = root.child('Users')
         # userref = uref.child(user)
         # userdata = userref.get()
+        # return userdata
         return get_user_data(user)
 
 def update_settings(pocket_money, target_saving, user):
