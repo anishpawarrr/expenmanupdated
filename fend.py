@@ -172,7 +172,7 @@ elif st.session_state['opt'] == 'Settings' and st.session_state['login']:
         bend.create_user_info(user, pm, ts)
         st.success("History deleted successfully")
     with st.form("reminder"):
-        phno = st.number_input("Enter your number")
+        phno = int(st.number_input("Enter your number"))
         # st.write("To get whatsapp reminders click the link and send prebuilt message")
         # st.write("http://wa.me/+14155238886?text=join%20breath-forth", unsafe_allow_html=True)
         # b = st.button("Send messages to this number")
