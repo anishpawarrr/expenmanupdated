@@ -172,7 +172,7 @@ elif st.session_state['opt'] == 'Settings' and st.session_state['login']:
         bend.create_user_info(user, pm, ts)
         st.success("History deleted successfully")
     with st.form("reminder"):
-        st.write("To get reminders using WhatsApp ->")
+        st.subheader("Enable WhatsApp reminding service")
         phno = int(st.number_input("Enter your number"))
         # st.write("To get whatsapp reminders click the link and send prebuilt message")
         # st.write("http://wa.me/+14155238886?text=join%20breath-forth", unsafe_allow_html=True)
@@ -181,6 +181,7 @@ elif st.session_state['opt'] == 'Settings' and st.session_state['login']:
         if fsb and len(str(phno)) == 10:
             st.session_state['userinfo'] = bend.upload_phno(st.session_state['user'], st.session_state['userinfo'], phno)
             st.write("To get whatsapp reminders click the link and send prebuilt message")
+            st.write("If message doesn't get formed automatically, text 'join breath-forth'")
             st.write("http://wa.me/+14155238886?text=join%20breath-forth", unsafe_allow_html=True)
         elif fsb:
             st.write("You entered something wrong")
