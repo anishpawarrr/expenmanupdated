@@ -58,6 +58,16 @@ def create_user_info(mail_id, pocket_money, target_saving):
 # @st.cache(allow_output_mutation= True)
 def get_user_data(user):
     try:
+        # nm = numpy.random.randint(1000)
+        # nm = str(nm)
+        cred = credentials.Certificate("service_account_key.json")
+        app = firebase_admin.initialize_app(cred)
+        root = db.reference(url="https://expensemanager-f165e-default-rtdb.asia-southeast1.firebasedatabase.app/")
+        uref = root.child('Users')
+        userref = uref.child(user)
+        userdata = userref.get()
+        return userdata
+    except:
         nm = numpy.random.randint(1000)
         nm = str(nm)
         cred = credentials.Certificate("service_account_key.json")
@@ -67,17 +77,7 @@ def get_user_data(user):
         userref = uref.child(user)
         userdata = userref.get()
         return userdata
-    except:
-        # nm = numpy.random.randint(1000)
-        # nm = str(nm)
-        # cred = credentials.Certificate("service_account_key.json")
-        # app = firebase_admin.initialize_app(cred, name=nm)
-        # root = db.reference(url="https://expensemanager-f165e-default-rtdb.asia-southeast1.firebasedatabase.app/")
-        # uref = root.child('Users')
-        # userref = uref.child(user)
-        # userdata = userref.get()
-        # return userdata
-        return get_user_data(user)
+        # return get_user_data(user)
 
 def update_settings(pocket_money, target_saving, user):
     root = db.reference(url="https://expensemanager-f165e-default-rtdb.asia-southeast1.firebasedatabase.app/")
