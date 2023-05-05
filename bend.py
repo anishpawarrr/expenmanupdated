@@ -47,7 +47,7 @@ def create_user_info(mail_id, pocket_money, target_saving):
     uref = root.child('Users')
     uref.update(udata)
 
-@st.cache(allow_output_mutation= True)
+# @st.cache(allow_output_mutation= True)
 def get_user_data(user):
     try:
         nm = numpy.random.randint(1000)
@@ -60,7 +60,7 @@ def get_user_data(user):
         userdata = userref.get()
         return userdata
     except:
-        # nm = numpy.random.randint(100)
+        # nm = numpy.random.randint(1000)
         # nm = str(nm)
         # cred = credentials.Certificate("service_account_key.json")
         # app = firebase_admin.initialize_app(cred, name=nm)
@@ -206,4 +206,4 @@ def signupmail(user : str):
     sub = "Welcome to TASKWALLET!"
     sendmail(user, body, sub)
 
-# signupmail('pa.24102003@gmail.com')
+# signupmail('anishpurupawar@gmail.com')

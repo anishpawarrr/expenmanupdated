@@ -37,7 +37,7 @@
 #         message_list = ''
 #         for j in today_list:
 #             message_list = message_list + j + '\n'
-#         body = 'Hi, your tasks for today->\n' + message_list
+#         body = "You've got a reminder from TASKWALLET,\n Your tasks for today->\n" + message_list
 #         message = client.messages.create(
 #           from_='whatsapp:+14155238886',
 #           body=body,
@@ -74,7 +74,7 @@
 #         message_list = ''
 #         for j in today_list:
 #             message_list = message_list + j + '\n'
-#         body = "You've got a reminder, your tasks for tomorrow ->\n" + message_list
+#         body = "You've got a reminder from TASKWALLET,\nYour tasks for tomorrow ->\n" + message_list
 #         message = client.messages.create(
 #             from_='whatsapp:+14155238886',
 #             body=body,

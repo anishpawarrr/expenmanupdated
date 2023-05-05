@@ -9,15 +9,24 @@ st.set_page_config(page_title="TW", layout='centered', initial_sidebar_state="ex
 if 'user' not in st.session_state:
     st.session_state['user'] = 'x'
 if 'opt' not in st.session_state:
-    st.session_state['opt'] = 'Home'
+    st.session_state['opt'] = ''
 if 'login' not in st.session_state:
     st.session_state['login'] = False
 if 'userinfo' not in st.session_state:
     st.session_state['userinfo'] = {}
 with st.sidebar as sb0:
+    if st.session_state['login']:
+        opt = om.option_menu(menu_title='TASK WALLET',
+                             options=['Home','Calendar', 'Record Expense', 'Expense History', 'Update Tasks', 'Sign up', 'Settings'],
+                             default_index=0, menu_icon='bi bi-layers-fill',
+                             icons=['bi bi-door-open', 'bi bi-calendar-check', 'bi bi-cash', 'bi bi-clock-history', 'bi bi-card-checklist', 'bi bi-person-plus', 'bi bi-gear'])
+        st.session_state['opt'] = opt
+
     if not st.session_state['login']:
         with st.form("login_form"):
             # st.header("Login")
+            st.subheader("Welcome to TASKWALLET")
+            st.subheader("Login")
             user_name = st.text_input("User MailId")
             password = st.text_input("Password", type='password')
             form_submit_button = st.form_submit_button(label="LogIn")
@@ -25,12 +34,33 @@ with st.sidebar as sb0:
                 st.session_state['login'], st.session_state['user'] = bend.sign_in(user_name,password)
             if st.session_state['user'] == '':
                 st.error("Wrong credentials")
+        st.write("---")
+        st.subheader("Not a user? SignUp here")
+        try:
+            with st.form('sign_up'):
+                mail_id = st.text_input("User Mailid")
+                password = st.text_input("Password", type='password')
+                pocket_money = st.number_input("Your pocket money")
+                target_saving = st.number_input("Target saving")
+                sign_up_button = st.form_submit_button("Sign Up")
+            if sign_up_button:
+                try:
+                    bend.sign_up(mail_id, password)
+                    bend.create_user_info(mail_id.replace('.', '!'), pocket_money, target_saving)
+                    st.balloons()
+                    st.write("Account created successfully")
+                except:
+                    st.error("User already exists!")
+        except:
+            st.subheader("Refresh the app and sign up again")
 
-    opt = om.option_menu(menu_title='TASK WALLET',
-                         options=['Home','Calendar', 'Record Expense', 'Expense History', 'Update Tasks', 'Sign up', 'Settings'],
-                         default_index=0, menu_icon='bi bi-layers-fill',
-                         icons=['bi bi-door-open', 'bi bi-calendar-check', 'bi bi-cash', 'bi bi-clock-history', 'bi bi-card-checklist', 'bi bi-person-plus', 'bi bi-gear'])
-    st.session_state['opt'] = opt
+
+    # if st.session_state['login']:
+    #     opt = om.option_menu(menu_title='TASK WALLET',
+    #                          options=['Home','Calendar', 'Record Expense', 'Expense History', 'Update Tasks', 'Sign up', 'Settings'],
+    #                          default_index=0, menu_icon='bi bi-layers-fill',
+    #                          icons=['bi bi-door-open', 'bi bi-calendar-check', 'bi bi-cash', 'bi bi-clock-history', 'bi bi-card-checklist', 'bi bi-person-plus', 'bi bi-gear'])
+    #     st.session_state['opt'] = opt
 
 if st.session_state['opt'] == 'Home'  and st.session_state['login']:
     st.session_state['userinfo'] = bend.get_user_data(st.session_state['user'])
@@ -39,9 +69,11 @@ if st.session_state['opt'] == 'Home'  and st.session_state['login']:
         st.session_state['home_select'] = ''
     st.session_state['home_select'] = om.option_menu(menu_title='', options=['Expenses', 'Tasks'], orientation='horizontal', icons=['bi bi-currency-dollar', 'bi bi-list-task'])
     if st.session_state['home_select'] == 'Expenses':
-        st.subheader("Amount spent : " + str(st.session_state['userinfo']['total']))
-        st.subheader("Remaining : " + str(st.session_state['userinfo']['pocket_money'] - st.session_state['userinfo']['total']))
-        if st.session_state['userinfo']['target_saving'] > (st.session_state['userinfo']['pocket_money'] - st.session_state['userinfo']['total']):
+        spent = st.session_state['userinfo']['total']
+        remaining = st.session_state['userinfo']['pocket_money'] - st.session_state['userinfo']['total']
+        st.subheader(f"Amount spent : {spent}")
+        st.subheader(f"Remaining : {remaining}")
+        if st.session_state['userinfo']['target_saving'] > remaining:
             st.error('You are using money from savings quota')
         st.subheader("This month's overview")
         expense_df = bend.time_line(st.session_state['userinfo'])
