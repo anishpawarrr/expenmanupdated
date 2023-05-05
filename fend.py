@@ -79,7 +79,11 @@ if st.session_state['opt'] == 'Home'  and st.session_state['login']:
         expense_df = bend.time_line(st.session_state['userinfo'])
         st.line_chart(expense_df, x = 'Date', y = 'Amount')
         pie_fig = bend.show_expenses_piechart(st.session_state['userinfo'])
+        st.subheader("Expense overview")
         st.plotly_chart(pie_fig)
+        expense_pie_fig = bend.show_expense_type_piechart(st.session_state['userinfo'])
+        st.subheader("Your expenses categorised according to type")
+        st.plotly_chart(expense_pie_fig)
     elif st.session_state['home_select'] == 'Tasks':
         task_list = bend.task_list(datetime.datetime.today().day, st.session_state['userinfo'])
         st.subheader("Today's tasks :")
@@ -117,13 +121,15 @@ elif st.session_state['opt'] == 'Calendar' and st.session_state['login']:
 
 elif st.session_state['opt'] == 'Record Expense' and st.session_state['login']:
     with st.form("Record"):
+        exp_type_list = ['Travel', 'Food', 'Entertainment', 'Education', 'Health', 'Personal care', 'Debt']
         st.subheader("Expense details")
         reason = st.text_input("Reason")
         day = st.date_input("Date").day
         amt = st.number_input("Amount")
+        exp_type = st.selectbox("Expense type", exp_type_list)
         fsb = st.form_submit_button("Enter record")
     if fsb:
-        st.session_state['userinfo'] = bend.record_exp(reason, day, amt, st.session_state['user'], st.session_state['userinfo'])
+        st.session_state['userinfo'] = bend.record_exp(exp_type, reason, day, amt, st.session_state['user'], st.session_state['userinfo'])
         st.success("Entry recorded")
 elif st.session_state['opt'] == 'Expense History' and st.session_state['login']:
     st.subheader(f"Your expenses for {datetime.datetime.today().month}/23")

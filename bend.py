@@ -41,6 +41,14 @@ def create_user_info(mail_id, pocket_money, target_saving):
     calendar_dict['Amount'] = ""
     calendar_dict['Date'] = ""
     calendar_dict['total'] = 0
+    calendar_dict['Travel'] = 0
+    calendar_dict['Food'] = 0
+    calendar_dict['Entertainment'] = 0
+    calendar_dict['Education'] = 0
+    calendar_dict['Health'] = 0
+    calendar_dict['Personal care'] = 0
+    calendar_dict['Debt'] = 0
+
     udata = {mail_id : calendar_dict}
     # cred = credentials.Certificate("service_account_key.json")
     root = db.reference(url = "https://expensemanager-f165e-default-rtdb.asia-southeast1.firebasedatabase.app/")
@@ -50,6 +58,16 @@ def create_user_info(mail_id, pocket_money, target_saving):
 # @st.cache(allow_output_mutation= True)
 def get_user_data(user):
     try:
+        # nm = numpy.random.randint(1000)
+        # nm = str(nm)
+        cred = credentials.Certificate("service_account_key.json")
+        app = firebase_admin.initialize_app(cred)
+        root = db.reference(url="https://expensemanager-f165e-default-rtdb.asia-southeast1.firebasedatabase.app/")
+        uref = root.child('Users')
+        userref = uref.child(user)
+        userdata = userref.get()
+        return userdata
+    except:
         nm = numpy.random.randint(1000)
         nm = str(nm)
         cred = credentials.Certificate("service_account_key.json")
@@ -59,17 +77,7 @@ def get_user_data(user):
         userref = uref.child(user)
         userdata = userref.get()
         return userdata
-    except:
-        # nm = numpy.random.randint(1000)
-        # nm = str(nm)
-        # cred = credentials.Certificate("service_account_key.json")
-        # app = firebase_admin.initialize_app(cred, name=nm)
-        # root = db.reference(url="https://expensemanager-f165e-default-rtdb.asia-southeast1.firebasedatabase.app/")
-        # uref = root.child('Users')
-        # userref = uref.child(user)
-        # userdata = userref.get()
-        # return userdata
-        return get_user_data(user)
+        # return get_user_data(user)
 
 def update_settings(pocket_money, target_saving, user):
     root = db.reference(url="https://expensemanager-f165e-default-rtdb.asia-southeast1.firebasedatabase.app/")
@@ -130,18 +138,30 @@ def show_expenses_piechart(userdata):
     fig = go.Figure(data=[go.Pie(labels=list(pie_dict.keys()), values=list(pie_dict.values()))])
     return fig
 
+def show_expense_type_piechart(userdata):
+    pie_dict = {"Travel": int(userdata['Travel']),
+                "Food": int(userdata['Food']),
+                "Entertainment": int(userdata['Entertainment']),
+                "Education": int(userdata['Education']),
+                "Health": int(userdata['Health']),
+                "Personal care": int(userdata['Personal care']),
+                "Debt": int(userdata['Debt'])}
+    fig = go.Figure(data=[go.Pie(labels=list(pie_dict.keys()), values=list(pie_dict.values()))])
+    return fig
+
 def time_line(userdata):
     expen = userdata['expenses']
     dates = [i for i in range(32)]
     dataframe = pd.DataFrame(list(zip(dates,expen)), columns=['Date', 'Amount'])
     return dataframe
 
-def record_exp(reason, day, amount, user, userdata):
+def record_exp(exptype, reason, day, amount, user, userdata):
     userdata['expenses'][day] += amount
     userdata['Amount'] += (str(amount) + ",")
     userdata['Reason'] += (reason + ",")
     userdata['Date'] += (str(day) + ',')
     userdata['total'] += amount
+    userdata[exptype] += amount
     root = db.reference(url="https://expensemanager-f165e-default-rtdb.asia-southeast1.firebasedatabase.app/")
     uref = root.child('Users')
     userref = uref.child(user)
