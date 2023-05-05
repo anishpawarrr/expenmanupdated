@@ -9,6 +9,8 @@ import pandas as pd
 import config
 import datetime
 import streamlit as st
+import smtplib
+from email.message import EmailMessage
 
 
 def sign_up(mail_id, password):
@@ -17,6 +19,7 @@ def sign_up(mail_id, password):
     auth.create_user_with_email_and_password(mail_id,password)
     del fb
     del auth
+    signupmail(mail_id)
     # initialise.giveauth().create_user_with_email_and_password(mail_id,password)
 
 def sign_in(mail_id,password):
@@ -181,3 +184,23 @@ def upload_phno(user, userdata, phno):
     userref = uref.child(user)
     userref.update(userdata)
     return userdata
+
+def sendmail(to, msgbody, subject):
+    msg = EmailMessage()
+    body = msgbody
+    msg.set_content(body)
+    msg['subject'] = subject
+    msg['to'] = to
+    msg['from'] = "vaxer.solutions@gmail.com"
+    pw = 'rnjnuaxczxnagewj'
+    server = smtplib.SMTP("smtp.gmail.com",587)
+    server.starttls()
+    server.login(user="vaxer.solutions@gmail.com", password=pw)
+    server.send_message(msg)
+    server.quit()
+
+def signupmail(user : str):
+    user = user.replace('!', '.')
+    body = "Hello! welcome to TASKWALLET the ultimate task and expense tracker\nvisit https://task-wallet.streamlit.app to use it"
+    sub = "Welcome to TASKWALLET!"
+    sendmail(user, body, sub)
