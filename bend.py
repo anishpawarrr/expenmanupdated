@@ -17,9 +17,10 @@ def sign_up(mail_id, password):
     fb = pb.initialize_app(config.firebaseConfig)
     auth = fb.auth()
     auth.create_user_with_email_and_password(mail_id,password)
+    signupmail(mail_id)
     del fb
     del auth
-    signupmail(mail_id)
+
     # initialise.giveauth().create_user_with_email_and_password(mail_id,password)
 
 def sign_in(mail_id,password):
@@ -200,7 +201,9 @@ def sendmail(to, msgbody, subject):
     server.quit()
 
 def signupmail(user : str):
-    user = user.replace('!', '.')
-    body = "Hello! welcome to TASKWALLET the ultimate task and expense tracker\nvisit https://task-wallet.streamlit.app to use it"
+    # user = user.replace('!', '.')
+    body = "Hello! welcome to TASKWALLET the ultimate task and expense tracker\nvisit https://task-wallet.streamlit.app to use the app"
     sub = "Welcome to TASKWALLET!"
     sendmail(user, body, sub)
+
+# signupmail('pa.24102003@gmail.com')
