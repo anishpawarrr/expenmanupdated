@@ -8,6 +8,7 @@ from pandas import json_normalize
 import pandas as pd
 import config
 import datetime
+import streamlit as st
 
 
 def sign_up(mail_id, password):
@@ -42,6 +43,7 @@ def create_user_info(mail_id, pocket_money, target_saving):
     uref = root.child('Users')
     uref.update(udata)
 
+@st.cache(allow_output_mutation= True)
 def get_user_data(user):
     try:
         nm = numpy.random.randint(1000)

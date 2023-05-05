@@ -76,12 +76,12 @@ elif st.session_state['opt'] == 'Calendar' and st.session_state['login']:
             continue
             # st.write('No tasks scheduled')
             # continue
-        with st.form('calendar', key=i):
+        with st.form(f'{i}calendar'):
             st.subheader(f'Tasks for {i}/{month}:')
+            cfsb = st.form_submit_button('')
             for j in task_list:
                 st.write(f'{c}. {j}')
                 c += 1
-            cfsb = st.form_submit_button('')
 
 elif st.session_state['opt'] == 'Record Expense' and st.session_state['login']:
     with st.form("Record"):
@@ -94,6 +94,7 @@ elif st.session_state['opt'] == 'Record Expense' and st.session_state['login']:
         st.session_state['userinfo'] = bend.record_exp(reason, day, amt, st.session_state['user'], st.session_state['userinfo'])
         st.success("Entry recorded")
 elif st.session_state['opt'] == 'Expense History' and st.session_state['login']:
+    st.subheader(f"Your expenses for {datetime.datetime.today().month}/23")
     df = bend.history_df(st.session_state['userinfo'])
     st.table(df)
 
