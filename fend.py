@@ -17,9 +17,9 @@ if 'userinfo' not in st.session_state:
 with st.sidebar as sb0:
     if st.session_state['login']:
         opt = om.option_menu(menu_title='TASK WALLET',
-                             options=['Home','Calendar', 'Record Expense', 'Expense History', 'Update Tasks', 'Sign up', 'Settings'],
+                             options=['Home','Calendar', 'Record Expense', 'Expense History', 'Update Tasks', 'Sign up', 'Split expenses','Settings'],
                              default_index=0, menu_icon='bi bi-layers-fill',
-                             icons=['bi bi-door-open', 'bi bi-calendar-check', 'bi bi-cash', 'bi bi-clock-history', 'bi bi-card-checklist', 'bi bi-person-plus', 'bi bi-gear'])
+                             icons=['bi bi-door-open', 'bi bi-calendar-check', 'bi bi-cash', 'bi bi-clock-history', 'bi bi-card-checklist', 'bi bi-person-plus', 'bi bi-signpost-split','bi bi-gear'])
         st.session_state['opt'] = opt
 
     if not st.session_state['login']:
@@ -234,6 +234,18 @@ elif st.session_state['opt'] == 'Settings' and st.session_state['login']:
     st.write("For support contact :")
     st.write("Mail : anishpurupawar@gmail.com")
     st.write("Phone Number : +919146623526")
+elif st.session_state['opt'] == 'Split expenses' and st.session_state['login']:
+    with st.form('split'):
+        emails = st.text_input("Enter MailIds of people involved in expense")
+        amount = st.text_input("Enter respected amount to be paid")
+        st.text("Give commas between mails and expenses")
+        sfsb = st.form_submit_button("Split")
+        if sfsb:
+            mail_list = emails.split(',')
+            amount_list = amount.split(',')
+            bend.split_mail(mail_list, amount_list, st.session_state['user'])
+            st.info("Reminders sent successfully")
+
 
 if not(st.session_state['login'] or st.session_state['opt'] == 'Sign up'):
     st.header("Login to your account first")
