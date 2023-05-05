@@ -81,6 +81,7 @@ elif st.session_state['opt'] == 'Calendar' and st.session_state['login']:
             for j in task_list:
                 st.write(f'{c}. {j}')
                 c += 1
+        cfsb = st.form_submit_button('')
 
 elif st.session_state['opt'] == 'Record Expense' and st.session_state['login']:
     with st.form("Record"):
