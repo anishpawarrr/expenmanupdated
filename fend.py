@@ -76,10 +76,11 @@ elif st.session_state['opt'] == 'Calendar' and st.session_state['login']:
             continue
             # st.write('No tasks scheduled')
             # continue
-        st.subheader(f'Tasks for {i}/{month}:')
-        for j in task_list:
-            st.write(f'{c}. {j}')
-            c += 1
+        with st.form('calendar', key=i):
+            st.subheader(f'Tasks for {i}/{month}:')
+            for j in task_list:
+                st.write(f'{c}. {j}')
+                c += 1
 
 elif st.session_state['opt'] == 'Record Expense' and st.session_state['login']:
     with st.form("Record"):
