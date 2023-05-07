@@ -33,10 +33,11 @@ def sign_in(mail_id,password):
         return False, ''
 
 
-def create_user_info(mail_id, pocket_money, target_saving):
+def create_user_info(mail_id, pocket_money, target_saving, phno=0):
     calendar_dict = calendar()
     calendar_dict["pocket_money"] = pocket_money
     calendar_dict['target_saving'] = target_saving
+    calendar_dict['phno'] = phno
     calendar_dict['Reason'] = ""
     calendar_dict['Amount'] = ""
     calendar_dict['Date'] = ""
@@ -58,16 +59,6 @@ def create_user_info(mail_id, pocket_money, target_saving):
 # @st.cache(allow_output_mutation= True)
 def get_user_data(user):
     try:
-        # nm = numpy.random.randint(1000)
-        # nm = str(nm)
-        cred = credentials.Certificate("service_account_key.json")
-        app = firebase_admin.initialize_app(cred)
-        root = db.reference(url="https://expensemanager-f165e-default-rtdb.asia-southeast1.firebasedatabase.app/")
-        uref = root.child('Users')
-        userref = uref.child(user)
-        userdata = userref.get()
-        return userdata
-    except:
         nm = numpy.random.randint(1000)
         nm = str(nm)
         cred = credentials.Certificate("service_account_key.json")
@@ -77,7 +68,17 @@ def get_user_data(user):
         userref = uref.child(user)
         userdata = userref.get()
         return userdata
-        # return get_user_data(user)
+    except:
+        # nm = numpy.random.randint(1000)
+        # nm = str(nm)
+        # cred = credentials.Certificate("service_account_key.json")
+        # app = firebase_admin.initialize_app(cred, name=nm)
+        # root = db.reference(url="https://expensemanager-f165e-default-rtdb.asia-southeast1.firebasedatabase.app/")
+        # uref = root.child('Users')
+        # userref = uref.child(user)
+        # userdata = userref.get()
+        # return userdata
+        return get_user_data(user)
 
 def update_settings(pocket_money, target_saving, user):
     root = db.reference(url="https://expensemanager-f165e-default-rtdb.asia-southeast1.firebasedatabase.app/")
@@ -195,7 +196,11 @@ def new_month():
     for i in dicti.keys():
         pm = dicti[i]['pocket_money']
         ts = dicti[i]['target_saving']
-        create_user_info(i, pm, ts)
+        try:
+            phno = dicti[i]['phno']
+        except:
+            phno = 0
+        create_user_info(i, pm, ts, phno)
 
 
 def upload_phno(user, userdata, phno):
