@@ -62,9 +62,11 @@ with st.sidebar as sb0:
         #     st.subheader("Refresh the app and sign up again")
 
     opt = om.option_menu(menu_title='TASK WALLET',
-                         options=['Home','Calendar', 'Record Expense', 'Expense History', 'Update Tasks', 'Sign up', 'Settings'],
+                         options=['Home', 'Calendar', 'Record Expense', 'Expense History', 'Update Tasks',
+                                  'Sign up', 'Split expenses', 'Settings'],
                          default_index=0, menu_icon='bi bi-layers-fill',
-                         icons=['bi bi-door-open', 'bi bi-calendar-check', 'bi bi-cash', 'bi bi-clock-history', 'bi bi-card-checklist', 'bi bi-person-plus', 'bi bi-gear'])
+                         icons=['bi bi-door-open', 'bi bi-calendar-check', 'bi bi-cash', 'bi bi-clock-history',
+                                'bi bi-card-checklist', 'bi bi-person-plus', 'bi bi-signpost-split', 'bi bi-gear'])
     st.session_state['opt'] = opt
 
 #Home tab
