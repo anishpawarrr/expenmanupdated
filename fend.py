@@ -3,10 +3,9 @@ import streamlit as st
 import streamlit_option_menu as om
 import bend
 
-#setting config
 st.set_page_config(page_title="TW", layout='centered', initial_sidebar_state="expanded")
 
-#initialising session state
+
 if 'user' not in st.session_state:
     st.session_state['user'] = 'x'
 if 'opt' not in st.session_state:
@@ -15,19 +14,17 @@ if 'login' not in st.session_state:
     st.session_state['login'] = False
 if 'userinfo' not in st.session_state:
     st.session_state['userinfo'] = {}
-
-#Main sidebar
 with st.sidebar as sb0:
-    # if st.session_state['login']:
-    #     opt = om.option_menu(menu_title='TASK WALLET',
-    #                          options=['Home','Calendar', 'Record Expense', 'Expense History', 'Update Tasks', 'Sign up', 'Split expenses','Settings'],
-    #                          default_index=0, menu_icon='bi bi-layers-fill',
-    #                          icons=['bi bi-door-open', 'bi bi-calendar-check', 'bi bi-cash', 'bi bi-clock-history', 'bi bi-card-checklist', 'bi bi-person-plus', 'bi bi-signpost-split','bi bi-gear'])
-    #     st.session_state['opt'] = opt
+    if st.session_state['login']:
+        opt = om.option_menu(menu_title='TASK WALLET',
+                             options=['Home','Calendar', 'Record Expense', 'Expense History', 'Update Tasks', 'Sign up', 'Split expenses','Settings'],
+                             default_index=0, menu_icon='bi bi-layers-fill',
+                             icons=['bi bi-door-open', 'bi bi-calendar-check', 'bi bi-cash', 'bi bi-clock-history', 'bi bi-card-checklist', 'bi bi-person-plus', 'bi bi-signpost-split','bi bi-gear'])
+        st.session_state['opt'] = opt
 
     if not st.session_state['login']:
         with st.form("login_form"):
-            # login page
+            # st.header("Login")
             st.subheader("Welcome to TASKWALLET")
             st.subheader("Login")
             user_name = st.text_input("User MailId")
@@ -38,38 +35,33 @@ with st.sidebar as sb0:
             if st.session_state['user'] == '':
                 st.error("Wrong credentials")
         st.write("---")
-        # st.subheader("Not a user? SignUp here")
-        # try:
-        #     with st.form('sign_up'):
-        #         #signup page
-        #         mail_id = st.text_input("User Mailid")
-        #         password = st.text_input("Password", type='password')
-        #         pocket_money = st.number_input("Your pocket money")
-        #         target_saving = st.number_input("Target saving")
-        #         sign_up_button = st.form_submit_button("Sign Up")
-        #     if sign_up_button:
-        #         try:
-        #             #creatng user
-        #             bend.sign_up(mail_id, password)
-        #             #inserting to database
-        #             bend.create_user_info(mail_id.replace('.', '!'), pocket_money, target_saving)
-        #             st.balloons()
-        #             st.write("Account created successfully")
-        #         except:
-        #             #incase user exists
-        #             st.error("User already exists!")
-        # except:
-        #     st.subheader("Refresh the app and sign up again")
+        st.subheader("Not a user? SignUp here")
+        try:
+            with st.form('sign_up'):
+                mail_id = st.text_input("User Mailid")
+                password = st.text_input("Password", type='password')
+                pocket_money = st.number_input("Your pocket money")
+                target_saving = st.number_input("Target saving")
+                sign_up_button = st.form_submit_button("Sign Up")
+            if sign_up_button:
+                try:
+                    bend.sign_up(mail_id, password)
+                    bend.create_user_info(mail_id.replace('.', '!'), pocket_money, target_saving)
+                    st.balloons()
+                    st.write("Account created successfully")
+                except:
+                    st.error("User already exists!")
+        except:
+            st.subheader("Refresh the app and sign up again")
 
-    opt = om.option_menu(menu_title='TASK WALLET',
-                         options=['Home', 'Calendar', 'Record Expense', 'Expense History', 'Update Tasks',
-                                  'Sign up', 'Split expenses', 'Settings'],
-                         default_index=0, menu_icon='bi bi-layers-fill',
-                         icons=['bi bi-door-open', 'bi bi-calendar-check', 'bi bi-cash', 'bi bi-clock-history',
-                                'bi bi-card-checklist', 'bi bi-person-plus', 'bi bi-signpost-split', 'bi bi-gear'])
-    st.session_state['opt'] = opt
 
-#Home tab
+    # if st.session_state['login']:
+    #     opt = om.option_menu(menu_title='TASK WALLET',
+    #                          options=['Home','Calendar', 'Record Expense', 'Expense History', 'Update Tasks', 'Sign up', 'Settings'],
+    #                          default_index=0, menu_icon='bi bi-layers-fill',
+    #                          icons=['bi bi-door-open', 'bi bi-calendar-check', 'bi bi-cash', 'bi bi-clock-history', 'bi bi-card-checklist', 'bi bi-person-plus', 'bi bi-gear'])
+    #     st.session_state['opt'] = opt
+
 if st.session_state['opt'] == 'Home'  and st.session_state['login']:
     st.session_state['userinfo'] = bend.get_user_data(st.session_state['user'])
 
@@ -77,7 +69,6 @@ if st.session_state['opt'] == 'Home'  and st.session_state['login']:
         st.session_state['home_select'] = ''
     st.session_state['home_select'] = om.option_menu(menu_title='', options=['Expenses', 'Tasks'], orientation='horizontal', icons=['bi bi-currency-dollar', 'bi bi-list-task'])
     if st.session_state['home_select'] == 'Expenses':
-        #expense tab
         spent = st.session_state['userinfo']['total']
         remaining = st.session_state['userinfo']['pocket_money'] - st.session_state['userinfo']['total']
         st.subheader(f"Amount spent : {spent}")
@@ -94,7 +85,6 @@ if st.session_state['opt'] == 'Home'  and st.session_state['login']:
         st.subheader("Your expenses categorised according to type")
         st.plotly_chart(expense_pie_fig)
     elif st.session_state['home_select'] == 'Tasks':
-        #task tab
         task_list = bend.task_list(datetime.datetime.today().day, st.session_state['userinfo'])
         st.subheader("Today's tasks :")
         c = 1
@@ -107,7 +97,6 @@ if st.session_state['opt'] == 'Home'  and st.session_state['login']:
     # st.write(st.session_state['user'])
     # st.write(st.session_state['userinfo'])
 
-#calendar tab
 elif st.session_state['opt'] == 'Calendar' and st.session_state['login']:
     enddate = 32
     if datetime.datetime.today().month % 2 == 0:
@@ -125,12 +114,11 @@ elif st.session_state['opt'] == 'Calendar' and st.session_state['login']:
             # continue
         with st.form(f'{i}calendar'):
             st.subheader(f'Tasks for {i}/{month}:')
-            cfsb = st.form_submit_button('   ')
+            cfsb = st.form_submit_button('')
             for j in task_list:
                 st.write(f'{c}. {j}')
                 c += 1
 
-#record tab
 elif st.session_state['opt'] == 'Record Expense' and st.session_state['login']:
     with st.form("Record"):
         exp_type_list = ['Travel', 'Food', 'Entertainment', 'Education', 'Health', 'Personal care', 'Debt']
@@ -143,8 +131,6 @@ elif st.session_state['opt'] == 'Record Expense' and st.session_state['login']:
     if fsb:
         st.session_state['userinfo'] = bend.record_exp(exp_type, reason, day, amt, st.session_state['user'], st.session_state['userinfo'])
         st.success("Entry recorded")
-
-#History tab
 elif st.session_state['opt'] == 'Expense History' and st.session_state['login']:
     st.subheader(f"Your expenses for {datetime.datetime.today().month}/23")
     df = bend.history_df(st.session_state['userinfo'])
@@ -163,12 +149,10 @@ elif st.session_state['opt'] == 'Expense History' and st.session_state['login']:
         "text/csv",
     )
 
-#Update tab
 elif st.session_state['opt'] == 'Update Tasks' and st.session_state['login']:
     if 'uopt' not in st.session_state:
         st.session_state['uopt'] = ''
     st.session_state['uopt'] = om.option_menu(menu_title="", options=['Create', 'Delete'], icons=['bi bi-folder-plus','bi bi-folder-minus'] ,orientation='horizontal')
-    #create option
     if st.session_state['uopt'] == 'Create':
         with st.form('Create_Task'):
             date = st.date_input("Task date")
@@ -180,7 +164,6 @@ elif st.session_state['opt'] == 'Update Tasks' and st.session_state['login']:
             st.session_state['userinfo'] = bend.create_task(day, task, st.session_state['userinfo'], st.session_state['user'])
             # st.session_state['userinfo'] = bend.get_user_data(st.session_state['user'])
             st.info("Task created successfully")
-    #delete option
     elif st.session_state['uopt'] == 'Delete':
         day = st.date_input("Date").day
         with st.form('Delete_Task'):
@@ -195,7 +178,7 @@ elif st.session_state['opt'] == 'Update Tasks' and st.session_state['login']:
             st.session_state['userinfo'] = bend.del_task(check_list, st.session_state['user'], task_list, st.session_state['userinfo'], day)
             # st.session_state['userinfo'] = bend.get_user_data(st.session_state['user'])
             st.info("Tasks deleted successfully")
-#Signup page
+
 elif st.session_state['opt'] == 'Sign up':
     try:
         with st.form('sign_up'):
@@ -207,18 +190,15 @@ elif st.session_state['opt'] == 'Sign up':
         if sign_up_button:
             try:
                 bend.sign_up(mail_id,password)
-                bend.create_user_info(mail_id.replace('.','!'),pocket_money,target_saving, 0)
+                bend.create_user_info(mail_id.replace('.','!'),pocket_money,target_saving)
                 st.balloons()
                 st.write("Account created successfully")
             except:
                 st.error("User already exists!")
     except:
         st.subheader("Refresh the app and sign up again")
-
-#settings page
 elif st.session_state['opt'] == 'Settings' and st.session_state['login']:
     with st.form("reminder"):
-        #whatsapp service
         st.subheader("Enable WhatsApp reminding service")
         phno = int(st.number_input("Enter your number"))
         # st.write("To get whatsapp reminders click the link and send prebuilt message")
@@ -233,7 +213,6 @@ elif st.session_state['opt'] == 'Settings' and st.session_state['login']:
         elif fsb:
             st.write("You entered something wrong")
     with st.form("update"):
-        #Update info
         st.subheader("Update info")
         pocket_money = st.number_input("New pocket money")
         target_saving = st.number_input("Target saving")
@@ -243,7 +222,6 @@ elif st.session_state['opt'] == 'Settings' and st.session_state['login']:
         st.info("Settings applied")
     # clear_history = st.button("Clear history")
     with st.form('Clear'):
-        #clear existing data
         st.subheader("Clear data")
         clear_history = st.form_submit_button("Clear history")
     if clear_history:
@@ -256,8 +234,6 @@ elif st.session_state['opt'] == 'Settings' and st.session_state['login']:
     st.write("For support contact :")
     st.write("Mail : anishpurupawar@gmail.com")
     st.write("Phone Number : +919146623526")
-
-#Split expense tab
 elif st.session_state['opt'] == 'Split expenses' and st.session_state['login']:
     with st.form('split'):
         emails = st.text_input("Enter MailIds of people involved in expense")
