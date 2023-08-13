@@ -33,11 +33,10 @@ def sign_in(mail_id,password):
         return False, ''
 
 
-def create_user_info(mail_id, pocket_money, target_saving, phno=0):
+def create_user_info(mail_id, pocket_money, target_saving):
     calendar_dict = calendar()
     calendar_dict["pocket_money"] = pocket_money
     calendar_dict['target_saving'] = target_saving
-    calendar_dict['phno'] = phno
     calendar_dict['Reason'] = ""
     calendar_dict['Amount'] = ""
     calendar_dict['Date'] = ""
@@ -196,11 +195,7 @@ def new_month():
     for i in dicti.keys():
         pm = dicti[i]['pocket_money']
         ts = dicti[i]['target_saving']
-        try:
-            phno = dicti[i]['phno']
-        except:
-            phno = 0
-        create_user_info(i, pm, ts, phno)
+        create_user_info(i, pm, ts)
 
 
 def upload_phno(user, userdata, phno):
