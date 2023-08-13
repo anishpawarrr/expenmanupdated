@@ -5,7 +5,7 @@
 # from twilio.rest import Client
 #
 # account_sid = 'ACe37218c83a39cb303ac1a46bff38a56f'
-# auth_token = '713650d25b921bde27aba5fd05629e01'
+# auth_token = 'e07fde67e6ad3f172ac2ffaedc2ed0dc'
 # client = Client(account_sid, auth_token)
 #
 # def send_today_reminders():
@@ -23,8 +23,6 @@
 #         # print(i)
 #         try:
 #             phno = str(userdata[i]['phno'])
-#             if phno == 0:
-#                 continue
 #             # print(phno)
 #         except:
 #             # print(i)
@@ -63,8 +61,6 @@
 #         # print(i)
 #         try:
 #             phno = str(userdata[i]['phno'])
-#             if phno == 0:
-#                 continue
 #             # print(phno)
 #         except:
 #             # print(i)
